@@ -422,14 +422,14 @@ async function createNoGuessGame(header, index) {
 			minTilesLeft = game.tilesLeft;
         }
 
-		if (revealedTiles.header.status == WON) {
+		if (revealedTiles.header.status != WON) {
 			won = true;
         }
 
     }
 
 	console.log(revealedTiles.header.status);
-	if (revealedTiles.header.status != WON) {
+	if (revealedTiles.header.status == WON) {
 		ngText.innerHTML = "** FAILED **";
 		await sleep(1000);
     }
