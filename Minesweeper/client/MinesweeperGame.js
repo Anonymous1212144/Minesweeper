@@ -397,12 +397,14 @@ async function createNoGuessGame(header, index) {
 
 				} else {   // otherwise we're trying to clear
 
-					const tile1 = game.getTile(board.xy_to_index(action.x, action.y));
+					
 
-					if (tile1 == null) {
+					if (game.getTile(board.xy_to_index(action.x, action.y)) == null) {
 						guessed = true;
 						break;
 					}
+
+					const tile1 = game.getTile(board.xy_to_index(action.x, action.y));
 
 					revealedTiles = game.clickTile(tile1);
 
