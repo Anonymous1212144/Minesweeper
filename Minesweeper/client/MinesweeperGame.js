@@ -324,7 +324,7 @@ async function createNoGuessGame(header, index) {
 	let won = false;
 	let loopCheck = 0;
 	let minTilesLeft = Number.MAX_SAFE_INTEGER;
-	let maxLoops = 100000;
+	let maxLoops = 1000000;
 	ngCancel = false;
 
 	const options = {};
