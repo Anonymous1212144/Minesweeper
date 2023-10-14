@@ -330,8 +330,8 @@ async function createNoGuessGame(header, index) {
 	const options = {};
 	options.playStyle = PLAY_STYLE_NOFLAGS;
 	options.verbose = false;
-	options.advancedGuessing = false;
-	options.noGuessingMode = true;
+	options.advancedGuessing = true;
+	options.noGuessingMode = false;
 
 	const startTime = Date.now();
 
@@ -397,11 +397,6 @@ async function createNoGuessGame(header, index) {
 
 				} else {   // otherwise we're trying to clear
 
-					if (action.prob != 1) {  // do no more actions after a guess
-						guessed = true;
-						break;
-					}
-
 					const tile1 = game.getTile(board.xy_to_index(action.x, action.y));
 
 					revealedTiles = game.clickTile(tile1);
@@ -422,7 +417,7 @@ async function createNoGuessGame(header, index) {
 			minTilesLeft = game.tilesLeft;
         }
 
-		if (revealedTiles.header.status != WON) {
+		if (revealedTiles.header.status == LOST) {
 			won = true;
         }
 
