@@ -402,6 +402,7 @@ async function createNoGuessGame(header, index) {
 					if (tile1 == null) {
 						guessed = true;
 						break;
+					}
 
 					revealedTiles = game.clickTile(tile1);
 
