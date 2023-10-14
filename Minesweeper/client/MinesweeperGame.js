@@ -330,8 +330,8 @@ async function createNoGuessGame(header, index) {
 	const options = {};
 	options.playStyle = PLAY_STYLE_NOFLAGS;
 	options.verbose = true;
-	options.advancedGuessing = true;
-	options.noGuessingMode = true;
+	//options.advancedGuessing = true;
+	//options.noGuessingMode = false;
 
 	const startTime = Date.now();
 
