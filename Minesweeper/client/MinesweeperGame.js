@@ -329,9 +329,9 @@ async function createNoGuessGame(header, index) {
 
 	const options = {};
 	options.playStyle = PLAY_STYLE_NOFLAGS;
-	options.verbose = false;
+	options.verbose = true;
 	options.advancedGuessing = true;
-	options.noGuessingMode = false;
+	options.noGuessingMode = true;
 
 	const startTime = Date.now();
 
@@ -417,7 +417,7 @@ async function createNoGuessGame(header, index) {
 			minTilesLeft = game.tilesLeft;
         }
 
-		if (revealedTiles.header.status == LOST) {
+		if (revealedTiles.header.status != WON) {
 			won = true;
         }
 
