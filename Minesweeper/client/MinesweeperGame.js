@@ -399,6 +399,10 @@ async function createNoGuessGame(header, index) {
 
 					const tile1 = game.getTile(board.xy_to_index(action.x, action.y));
 
+					if (tile1 == null) {
+						guessed = true;
+						break;
+
 					revealedTiles = game.clickTile(tile1);
 
 					if (revealedTiles.header.status != IN_PLAY) {  // if won or lost nothing more to do
