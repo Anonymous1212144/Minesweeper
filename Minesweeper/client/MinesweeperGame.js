@@ -329,7 +329,7 @@ async function createNoGuessGame(header, index) {
 
 	const options = {};
 	options.playStyle = PLAY_STYLE_NOFLAGS;
-	options.verbose = true;
+	//options.verbose = true;
 	//options.advancedGuessing = true;
 	//options.noGuessingMode = false;
 
@@ -400,6 +400,7 @@ async function createNoGuessGame(header, index) {
 					
 
 					if (game.getTile(board.xy_to_index(action.x, action.y)) == null) {
+						console.log(action);
 						guessed = true;
 						break;
 					}
