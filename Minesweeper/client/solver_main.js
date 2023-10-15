@@ -132,9 +132,9 @@ async function solver(board, options) {
     return reply;
 
     // **** functions below here ****
-
+    
     // this finds the best moves 
-    async function doSolve(board, options) {
+    async function doSolve(board, options, forcepe = false) {
 
         // find all the tiles which are revealed and have un-revealed / un-flagged adjacent squares
         const allCoveredTiles = [];
@@ -231,7 +231,7 @@ async function solver(board, options) {
             result.push(...trivial_actions(board, witnesses));
         }
  
-        if (result.length > oldMineCount) {
+        if (result.length > oldMineCount && !forcepe) {
             showMessage("The solver found " + result.length + " trivial safe moves");
             return result;
             /*
