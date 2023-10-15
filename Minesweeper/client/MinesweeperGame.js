@@ -200,8 +200,7 @@ async function handleActions(message) {
 		var tile = game.getTile(action.index);  
 		
 		if (action.action == ACTION_CLEAR) {  // click tile
-			const revealedTiles = game.clickTile(tile);
-
+			
 			if (action.die) {
 				for (let m=0; m<game.tiles.length; m++) {
 					if (game.tiles[m].is_bomb && game.tiles[m].is_covered) {
@@ -221,6 +220,8 @@ async function handleActions(message) {
 					}
 				}
 			}
+
+			const revealedTiles = game.clickTile(tile);
 
 			// get all the tiles revealed by this click
 			for (let j=0; j < revealedTiles.tiles.length; j++) {
