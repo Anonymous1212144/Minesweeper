@@ -200,8 +200,18 @@ async function handleActions(message) {
 		var tile = game.getTile(action.index);  
 		
 		if (action.action == ACTION_CLEAR) {  // click tile
+
+			
 			
 			if (!tile.is_bomb && action.die) {
+
+				const options = {};
+                    		options.playStyle = PLAY_STYLE_NOFLAGS;
+                    		options.verbose = false;
+				options.forcepe = true;
+
+				await solver(action.board, options);
+				
 				var witnesses = game.getAdjacent(tile);
 				for (let l=witnesses.length-1; l>=0; l--) {
 					if (witnesses[l].is_covered) {
