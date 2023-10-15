@@ -208,7 +208,7 @@ async function handleActions(message) {
 						const adjacents = game.getAdjacent(game.tiles[m]);
 						var valid = true;
 						for (let n=0; n<adjacents.length; n++) {
-							if (!adjacent[n].is_covered) {
+							if (!adjacents[n].is_covered) {
 								valid = false;
 								break;
 							}
