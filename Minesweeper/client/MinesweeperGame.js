@@ -207,10 +207,11 @@ async function handleActions(message) {
 
 				const options = {};
                     		options.playStyle = PLAY_STYLE_NOFLAGS;
-                    		options.verbose = false;
+                    		//options.verbose = false;
 				options.forcepe = true;
 
 				await solver(action.board, options);
+				console.log(action.board.getTileXY(0, 0).probability);
 				
 				var witnesses = game.getAdjacent(tile);
 				for (let l=witnesses.length-1; l>=0; l--) {
@@ -367,7 +368,7 @@ async function createNoGuessGame(header, index) {
 
 	const options = {};
 	options.playStyle = PLAY_STYLE_NOFLAGS;
-	//options.verbose = true;
+	options.verbose = false;
 	//options.advancedGuessing = true;
 	//options.noGuessingMode = false;
 
