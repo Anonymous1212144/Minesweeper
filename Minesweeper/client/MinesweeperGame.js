@@ -203,7 +203,23 @@ async function handleActions(message) {
 			const revealedTiles = game.clickTile(tile);
 
 			if (action.die) {
-				console.log(action.board);
+				for (let i=0; i<game.tiles.length) {
+					if (game.tiles[i].is_bomb && game.tiles[i].is_covered) {
+						const adjacents = game.getAdjacent(game.tiles[i]);
+						var valid = true;
+						for (let j=0; j<adjacents.length) {
+							if (!adjacent[j].is_covered) {
+								valid = false;
+								break;
+							}
+						}
+						if (valid) {
+							game.tiles[i].is_bomb = false;
+							tile.make_bomb();
+							break;
+						}
+					}
+				}
 			}
 
 			// get all the tiles revealed by this click
