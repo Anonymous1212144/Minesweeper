@@ -201,8 +201,15 @@ async function handleActions(message) {
 		
 		if (action.action == ACTION_CLEAR) {  // click tile
 			
-			if (action.die) {
+			if (!tile.is_bomb && action.die) {
+				var witnesses = game.getAdjacent(tile);
+				for (let l=witnesses.length-1; l>=0; l--) {
+					if (witnesses[l].is_convered) {
+						witnesses.pop();
+					}
+				}
 				for (let m=0; m<game.tiles.length; m++) {
+					if (witnesses.length > 0) {break;}
 					if (game.tiles[m].is_bomb && game.tiles[m].is_covered) {
 						const adjacents = game.getAdjacent(game.tiles[m]);
 						var valid = true;
