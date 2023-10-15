@@ -204,7 +204,7 @@ async function handleActions(message) {
 			if (!tile.is_bomb && action.die) {
 				var witnesses = game.getAdjacent(tile);
 				for (let l=witnesses.length-1; l>=0; l--) {
-					if (witnesses[l].is_convered) {
+					if (witnesses[l].is_covered) {
 						witnesses.pop();
 					}
 				}
