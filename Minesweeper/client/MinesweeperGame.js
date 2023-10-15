@@ -202,6 +202,10 @@ async function handleActions(message) {
 		if (action.action == ACTION_CLEAR) {  // click tile
 			const revealedTiles = game.clickTile(tile);
 
+			if (tile.hintText != "Clear") {
+				console.log("You guessed!");
+			}
+
 			// get all the tiles revealed by this click
 			for (let j=0; j < revealedTiles.tiles.length; j++) {
 				reply.tiles.push(revealedTiles.tiles[j]);   // add each of the results of clicking to the reply
@@ -324,7 +328,7 @@ async function createNoGuessGame(header, index) {
 	let won = false;
 	let loopCheck = 0;
 	let minTilesLeft = Number.MAX_SAFE_INTEGER;
-	let maxLoops = 1000000;
+	let maxLoops = 100000;
 	ngCancel = false;
 
 	const options = {};
