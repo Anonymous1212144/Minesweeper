@@ -203,18 +203,18 @@ async function handleActions(message) {
 			const revealedTiles = game.clickTile(tile);
 
 			if (action.die) {
-				for (let i=0; i<game.tiles.length; i++) {
-					if (game.tiles[i].is_bomb && game.tiles[i].is_covered) {
-						const adjacents = game.getAdjacent(game.tiles[i]);
+				for (let m=0; m<game.tiles.length; m++) {
+					if (game.tiles[m].is_bomb && game.tiles[m].is_covered) {
+						const adjacents = game.getAdjacent(game.tiles[m]);
 						var valid = true;
-						for (let j=0; j<adjacents.length; j++) {
-							if (!adjacent[j].is_covered) {
+						for (let n=0; n<adjacents.length; n++) {
+							if (!adjacent[n].is_covered) {
 								valid = false;
 								break;
 							}
 						}
 						if (valid) {
-							game.tiles[i].is_bomb = false;
+							game.tiles[m].is_bomb = false;
 							tile.make_bomb();
 							break;
 						}
