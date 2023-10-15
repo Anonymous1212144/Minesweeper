@@ -30,6 +30,10 @@ async function solver(board, options) {
         return;
     }
 
+    if (options.forcepe == null) {
+        options.forcepe = false;
+    }
+
     if (options.verbose == null) {
         options.verbose = true;
         writeToConsole("WARN: Verbose parameter not received by the solver, setting verbose = true");
@@ -75,7 +79,7 @@ async function solver(board, options) {
     // allow the solver to bring back no moves 5 times. No moves is possible when playing no-flags 
     while (noMoves < 5 && cleanActions.length == 0) {
         noMoves++;
-        const actions = await doSolve(board, options);  // look for solutions
+        const actions = await doSolve(board, options, options.forcepe);  // look for solutions
         //console.log(actions);
 
         if (options.playStyle == PLAY_STYLE_EFFICIENCY || options.playStyle == PLAY_STYLE_NOFLAGS_EFFICIENCY) {
