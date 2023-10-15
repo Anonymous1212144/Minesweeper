@@ -202,8 +202,8 @@ async function handleActions(message) {
 		if (action.action == ACTION_CLEAR) {  // click tile
 			const revealedTiles = game.clickTile(tile);
 
-			if (message.die) {
-				console.log(message.board);
+			if (action.die) {
+				console.log(action.board);
 			}
 
 			// get all the tiles revealed by this click
