@@ -2147,7 +2147,13 @@ function on_click(event) {
 
                     return;
                 } else if (tile.getHasHint() && tile.probability != 1 && tile.probability != 0 || !tile.getHasHint() && board.hasSafeTile()) {
+                    const options = {};
+                    options.playStyle = PLAY_STYLE_NOFLAGS;
+                    //options.verbose = false;
+				    options.forcepe = true;
+                    await solver(board, options);
                     message = { "header": board.getMessageHeader(), "actions": [{ "index": board.xy_to_index(col, row), "action": 1, "die": true, "board": board }]};
+				await solver(action.board, options);
                 } else {
                     message = { "header": board.getMessageHeader(), "actions": [{ "index": board.xy_to_index(col, row), "action": 1 }] }; // click
                 }
