@@ -31,7 +31,7 @@ async function solver(board, options) {
     }
 
     if (options.forcepe == null) {
-        options.forcepe = false;
+        options.forcepe = true;
     }
 
     if (options.verbose == null) {
