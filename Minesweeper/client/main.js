@@ -2146,7 +2146,7 @@ function on_click(event) {
                     console.log("Move is not hardcore valid");
 
                     return;
-                } else if (tile.getHasHint() && tile.probability != 1 && tile.probability != 0 || !tile.getHasHint() && board.hasSafeTile()) {
+                } else if (tile.getHasHint() && tile.probability != 1 && tile.probability != 0 || !tile.getHasHint()) {
 		    message = { "header": board.getMessageHeader(), "actions": [{ "index": board.xy_to_index(col, row), "action": 1, "die": true, "board": board }]};
                 } else {
                     message = { "header": board.getMessageHeader(), "actions": [{ "index": board.xy_to_index(col, row), "action": 1 }] }; // click
