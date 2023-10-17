@@ -176,7 +176,6 @@ async function handleActions(message) {
 	if (game == null) {
 		game = await createNoGuessGame(header, actions[0].index);
         }
-	}
 
     // send the game details to the client
 	reply.header.seed = game.seed;
