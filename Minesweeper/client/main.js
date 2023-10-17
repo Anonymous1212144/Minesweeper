@@ -53,7 +53,7 @@ const tooltip = document.getElementById('tooltip');
 const autoPlayCheckBox = document.getElementById("autoplay");
 const showHintsCheckBox = document.getElementById("showhints");
 const acceptGuessesCheckBox = document.getElementById("acceptguesses");
-const seedText = document.getElementById("seed");
+//const seedText = document.getElementById("seed");
 const gameTypeSafe = document.getElementById("gameTypeSafe");
 const gameTypeZero = document.getElementById("gameTypeZero");
 const switchButton = document.getElementById("switchButton");
@@ -136,12 +136,7 @@ async function startup() {
         console.log("Using old rng");
     }
 
-    let seed = urlParams.get('seed');
-    if (seed == null) {
-        seed = 0;
-    } else {
-        seedText.value = seed;
-    }
+    let seed = 0;
 
     const start = urlParams.get('start');
 
@@ -2448,7 +2443,7 @@ async function sendActionsMessage(message) {
     if (board.seed == 0) {
         board.seed = reply.header.seed;
         console.log("Setting game seed to " + reply.header.seed);
-        seedText.value = board.seed;
+        //seedText.value = board.seed;
     }
 
     if (reply.header.status == "lost") { 
