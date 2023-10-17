@@ -2146,7 +2146,7 @@ function on_click(event) {
                     console.log("Move is not hardcore valid");
 
                     return;
-                } else if (tile.getHasHint() && tile.probability != 1 && tile.probability != 0 || !tile.getHasHint()) {
+                } else if (tile.getHasHint() && tile.probability != 1 && tile.probability != 0) {
 		    message = { "header": board.getMessageHeader(), "actions": [{ "index": board.xy_to_index(col, row), "action": 1, "die": true, "board": board }]};
                 } else {
                     message = { "header": board.getMessageHeader(), "actions": [{ "index": board.xy_to_index(col, row), "action": 1 }] }; // click
@@ -2566,7 +2566,7 @@ async function sendActionsMessage(message) {
     }
 
     // do we want to show hints
-    if (showHintsCheckBox.checked || autoPlayCheckBox.checked || assistedPlayHints.length != 0 || docOverlay.value != "none" || docHardcore.checked) {
+    if (showHintsCheckBox.checked || autoPlayCheckBox.checked || assistedPlayHints.length != 0 || docOverlay.value != "none" || docHardcore.checked || true) {
 
         document.getElementById("canvas").style.cursor = "wait";
 
@@ -2581,7 +2581,7 @@ async function sendActionsMessage(message) {
             options.playStyle = PLAY_STYLE_NOFLAGS_EFFICIENCY;
         } 
 
-        if (docOverlay.value != "none" || docHardcore.checked) {
+        if (docOverlay.value != "none" || docHardcore.checked || true) {
             options.fullProbability = true;
         } else {
             options.fullProbability = false;
