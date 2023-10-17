@@ -202,7 +202,7 @@ async function startup() {
     //bulkRun(21, 12500);  // seed '21' Played 12500 won 5195
     //bulkRun(321, 10000);  // seed 321 played 10000 won 4119
 
-    showMessage("Welcome to minesweeper solver dedicated to Annie");
+    showMessage("Welcome to a perfectly normal game of Minesweeper!");
 }
 
 // launch a floating window to store/retrieve from local storage
@@ -480,7 +480,7 @@ function setPageTitle() {
         }
 
     } else {
-        title.innerHTML = "Minesweeper player"; // change the title
+        title.innerHTML = "Minesweeper"; // change the title
     }
 }
 
