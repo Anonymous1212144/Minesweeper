@@ -149,6 +149,98 @@ function killGame(message) {
 // this holds the games being played
 const serverGames = new Map();
 
+async function causeDie(game, tile, action) {
+	var shortcutworks = false;
+	var witnesses = game.getAdjacent(tile);
+	for (let l=witnesses.length-1; l>=0; l--) {
+		if (witnesses[l].is_covered) {
+			witnesses.pop();
+		}
+	}
+	for (let m=0; m<game.tiles.length; m++) {
+		if (witnesses.length > 0) {break;}
+		if (game.tiles[m].is_bomb && game.tiles[m].is_covered) {
+			const adjacents = game.getAdjacent(game.tiles[m]);
+			var valid = true;
+			for (let n=0; n<adjacents.length; n++) {
+				if (!adjacents[n].is_covered) {
+					valid = false;
+					break;
+				}
+			}
+			if (valid) {
+				game.tiles[m].is_bomb = false;
+				tile.make_bomb();
+				shortcutworks = true;
+				break;
+			}
+		}
+	}
+
+	if (!shortcutworks) {
+
+		var mineindices = []; 
+
+		for (let i=0; i<game.tiles.length; i++) {
+			if (game.tiles[i].is_bomb) {
+				mineindices.push(i)
+			}
+		}
+		var minecount = 1;
+		
+		const options = {};
+		options.verbose = false;
+		options.fullProbability = true;
+		
+		tile.make_bomb();
+		action.board.tiles[action.index].setFoundBomb();
+
+		var minei;
+		while (mineindices.length > 0 || minecount < game.num_bombs) {
+			await solver(action.board, options);
+			for (let i=0; i<game.tiles.length; i++) {
+				if (action.board.tiles[i].probability == 0) {
+					game.tiles[i].make_bomb();
+					minecount++;
+				}
+			}
+			for (let i=mineindices.length-1; i>=0; i--) {
+				minei = mineindices[i]
+				if (action.board.tiles[minei].probability == 1) {
+					mineindices.splice(i, 1);
+					game.tiles[minei].is_bomb = false;
+				} else if (action.board.tiles[minei].probability == 0) {
+					mineindices.splice(i, 1);
+				}
+			}
+			if (mineindices.length > 0) {
+				minei = mineindices.pop();
+				game.getTile(minei).make_bomb();
+				action.board.tiles[minei].setFoundBomb();
+				minecount++;
+			}
+		}
+
+		while (minecount < game.num_bombs) {
+			await solver(action.board, options);
+			var probs = [];
+			for (let i=0; i<game.tiles.length; i++) {
+				probs.push(action.board.tiles[i].probability);
+			}
+			const probsmin = Math.min(...probs)
+			for (let i=probs.length-1; i>=0; i--) {
+				if (probs[i] > probsmin) {
+					probs.splice(i, 1);
+				}
+			}
+			const minei = probs[(Math.floor(Math.random() * probs.length))];
+			game.tiles[minei].make_bomb();
+			action.board.tiles[minei].setFoundBomb();
+			minecount++;
+		}
+	}
+}
+
 
 // read the data message and perform the actions
 async function handleActions(message) {
@@ -193,101 +285,17 @@ async function handleActions(message) {
 	for (let i = 0; i < actions.length; i++) {
 		const action = actions[i];
 		
-		var tile = game.getTile(action.index);  
+		var tile = game.getTile(action.index);
+
+		const options = {};
+		options.verbose = false;
+		options.fullProbability = true;
+		await solver(action.board, options);
 		
 		if (action.action == ACTION_CLEAR) {  // click tile
 			
 			if (!tile.is_bomb && action.die) {
-				
-				var shortcutworks = false;
-				var witnesses = game.getAdjacent(tile);
-				for (let l=witnesses.length-1; l>=0; l--) {
-					if (witnesses[l].is_covered) {
-						witnesses.pop();
-					}
-				}
-				for (let m=0; m<game.tiles.length; m++) {
-					if (witnesses.length > 0) {break;}
-					if (game.tiles[m].is_bomb && game.tiles[m].is_covered) {
-						const adjacents = game.getAdjacent(game.tiles[m]);
-						var valid = true;
-						for (let n=0; n<adjacents.length; n++) {
-							if (!adjacents[n].is_covered) {
-								valid = false;
-								break;
-							}
-						}
-						if (valid) {
-							game.tiles[m].is_bomb = false;
-							tile.make_bomb();
-							shortcutworks = true;
-							break;
-						}
-					}
-				}
-
-				if (!shortcutworks) {
-
-					var mineindices = []; 
-	
-					for (let i=0; i<game.tiles.length; i++) {
-						if (game.tiles[i].is_bomb) {
-							mineindices.push(i)
-						}
-					}
-					var minecount = 1;
-					
-					const options = {};
-	                    		options.verbose = false;
-					options.fullProbability = true;
-					
-					tile.make_bomb();
-					action.board.tiles[action.index].setFoundBomb();
-	
-					var minei;
-					while (mineindices.length > 0 || minecount < game.num_bombs) {
-						await solver(action.board, options);
-						for (let i=0; i<game.tiles.length; i++) {
-							if (action.board.tiles[i].probability == 0) {
-								game.tiles[i].make_bomb();
-								minecount++;
-							}
-						}
-						for (let i=mineindices.length-1; i>=0; i--) {
-							minei = mineindices[i]
-							if (action.board.tiles[minei].probability == 1) {
-								mineindices.splice(i, 1);
-								game.tiles[minei].is_bomb = false;
-							} else if (action.board.tiles[minei].probability == 0) {
-								mineindices.splice(i, 1);
-							}
-						}
-						if (mineindices.length > 0) {
-							minei = mineindices.pop();
-							game.getTile(minei).make_bomb();
-							action.board.tiles[minei].setFoundBomb();
-							minecount++;
-						}
-					}
-	
-					while (minecount < game.num_bombs) {
-						await solver(action.board, options);
-						var probs = [];
-						for (let i=0; i<game.tiles.length; i++) {
-							probs.push(action.board.tiles[i].probability);
-						}
-						const probsmin = Math.min(...probs)
-						for (let i=probs.length-1; i>=0; i--) {
-							if (probs[i] > probsmin) {
-								probs.splice(i, 1);
-							}
-						}
-						const minei = probs[(Math.floor(Math.random() * probs.length))];
-						game.tiles[minei].make_bomb();
-						action.board.tiles[minei].setFoundBomb();
-						minecount++;
-					}
-				}
+				await causeDie(game, tile, action)
 			}
 
 			const revealedTiles = game.clickTile(tile);
@@ -310,6 +318,13 @@ async function handleActions(message) {
 			reply.tiles.push({"action" : 2, "index" : action.index, "flag" : tile.isFlagged()});    // set or remove flag
 
 		} else if (action.action == ACTION_CHORD) {  // chord
+			const affected = game.getAdjacent(tile);
+			for (i=0; i<affected.length; i++) {
+				if (action.board.tiles[affected[i]].probability != 1) {
+					await causeDie(game, affected[i], action);
+				}
+			}
+			
 			let revealedTiles = game.chordTile(tile);
 
 			// get all the tiles revealed by this chording
