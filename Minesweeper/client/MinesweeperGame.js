@@ -149,30 +149,32 @@ function killGame(message) {
 // this holds the games being played
 const serverGames = new Map();
 
-async function causeDie(game, tile, action) {
+async function causeDie(game, tile, action, chord=false) {
 	var shortcutworks = false;
-	var witnesses = game.getAdjacent(tile);
-	for (let l=witnesses.length-1; l>=0; l--) {
-		if (witnesses[l].is_covered) {
-			witnesses.pop();
+	if (chord==false) {
+		var witnesses = game.getAdjacent(tile);
+		for (let l=witnesses.length-1; l>=0; l--) {
+			if (witnesses[l].is_covered) {
+				witnesses.pop();
+			}
 		}
-	}
-	for (let m=0; m<game.tiles.length; m++) {
-		if (witnesses.length > 0) {break;}
-		if (game.tiles[m].is_bomb && game.tiles[m].is_covered) {
-			const adjacents = game.getAdjacent(game.tiles[m]);
-			var valid = true;
-			for (let n=0; n<adjacents.length; n++) {
-				if (!adjacents[n].is_covered) {
-					valid = false;
+		for (let m=0; m<game.tiles.length; m++) {
+			if (witnesses.length > 0) {break;}
+			if (game.tiles[m].is_bomb && game.tiles[m].is_covered) {
+				const adjacents = game.getAdjacent(game.tiles[m]);
+				var valid = true;
+				for (let n=0; n<adjacents.length; n++) {
+					if (!adjacents[n].is_covered) {
+						valid = false;
+						break;
+					}
+				}
+				if (valid) {
+					game.tiles[m].is_bomb = false;
+					tile.make_bomb();
+					shortcutworks = true;
 					break;
 				}
-			}
-			if (valid) {
-				game.tiles[m].is_bomb = false;
-				tile.make_bomb();
-				shortcutworks = true;
-				break;
 			}
 		}
 	}
@@ -193,7 +195,7 @@ async function causeDie(game, tile, action) {
 		options.fullProbability = true;
 		
 		tile.make_bomb();
-		action.board.tiles[action.index].setFoundBomb();
+		action.board.tiles[tile.index].setFoundBomb();
 
 		var minei;
 		while (mineindices.length > 0 || minecount < game.num_bombs) {
@@ -290,7 +292,7 @@ async function handleActions(message) {
 		if (action.action == ACTION_CLEAR) {  // click tile
 			
 			if (!tile.is_bomb && action.die) {
-				await causeDie(game, tile, action)
+				await causeDie(game, tile, action);
 			}
 
 			const revealedTiles = game.clickTile(tile);
@@ -313,16 +315,15 @@ async function handleActions(message) {
 			reply.tiles.push({"action" : 2, "index" : action.index, "flag" : tile.isFlagged()});    // set or remove flag
 
 		} else if (action.action == ACTION_CHORD) {  // chord
-			const options = {};
-			options.verbose = false;
-			options.fullProbability = true;
-			await solver(action.board, options);
-			
+			//const options = {};
+			//options.verbose = false;
+			//options.fullProbability = true;
+			//await solver(action.board, options);
 			const affected = game.getAdjacent(tile);
 			for (i=0; i<affected.length; i++) {
 				if (!affected[i].is_flagged && affected[i].is_bomb) {break;}
 				if (affected[i].is_covered && !affected[i].is_flagged && action.board.tiles[affected[i].index].probability != 1) {
-					await causeDie(game, affected[i], action);
+					await causeDie(game, affected[i], action, true);
 					break;
 				}
 			}
