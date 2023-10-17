@@ -205,9 +205,9 @@ async function handleActions(message) {
 
 				var mineindices = []; 
 
-				for (let m=0; m<game.tiles.length; m++) {
-					if (game.tiles[m].is_bomb) {
-						mineindices.push(m)
+				for (let i=0; i<game.tiles.length; i++) {
+					if (game.tiles[i].is_bomb) {
+						mineindices.push(i)
 					}
 				}
 				var minecount = 1;
@@ -217,7 +217,7 @@ async function handleActions(message) {
 				options.fullProbability = true;
 				
 				tile.make_bomb();
-				action.board.getTile(m).setFoundBomb();
+				action.board.getTile(action.index).setFoundBomb();
 
 				while (mineindices.length > 0 || minecount < game.num_bombs) {
 					await solver(action.board, options);
