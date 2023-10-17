@@ -64,7 +64,7 @@ const lockMineCount = document.getElementById("lockMineCount");
 const docPlayStyle = document.getElementById("playstyle");
 const docTileSize = document.getElementById("tilesize");
 const docFastPlay = document.getElementById("fastPlay");
-const docNgMode = document.getElementById("noGuessMode");
+//const docNgMode = document.getElementById("noGuessMode");
 const docHardcore = document.getElementById("hardcore");
 const docOverlay = document.getElementById("overlay");
 
