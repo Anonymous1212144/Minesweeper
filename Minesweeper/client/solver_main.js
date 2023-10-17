@@ -47,7 +47,7 @@ async function solver(board, options) {
 
     // this is used to force a probability engine search
     if (options.fullProbability == null) {
-        options.fullProbability = false;
+        options.fullProbability = true;
     }
 
     // this is used to stop the guess heuristic from pruning results
