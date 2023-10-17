@@ -217,26 +217,28 @@ async function handleActions(message) {
 				options.fullProbability = true;
 				
 				tile.make_bomb();
-				action.board.getTile(action.index).setFoundBomb();
+				action.board.tiles[action.index].setFoundBomb();
 
 				while (mineindices.length > 0 || minecount < game.num_bombs) {
 					await solver(action.board, options);
 					for (let i=0; i<game.tiles.length; i++) {
-						if (action.board.getTile(i).probability == 0) {
-							game.getTile(i).make_bomb();
+						if (action.board.tiles[i].probability == 0) {
+							game.tiles[i].make_bomb();
 							minecount++;
 						}
 					}
 					for (let i=mineindices.length-1; i>=0; i--) {
-						if (action.board.getTile(i).probability == 1) {
+						if (action.board.tiles[mineindices[i]].probability == 1) {
 							mineindices.splice(i, 1);
-							game.getTile(i).is_bomb = false;
-						} else if (action.board.getTile(i).probability == 0) {
+							game.tiles[i].is_bomb = false;
+						} else if (action.board.tiles[mineindices[i]].probability == 0) {
 							mineindices.splice(i, 1);
 						}
 					}
 					if (mineindices.length > 0) {
-						action.board.getTile(mineindices.pop()).setFoundBomb();
+						const minei = mineindices.pop();
+						game.getTile(minei).make_bomb();
+						action.board.tiles[minei].setFoundBomb();
 						minecount++;
 					}
 				}
@@ -245,7 +247,7 @@ async function handleActions(message) {
 					await solver(action.board, options);
 					var probs = [];
 					for (let i=0; i<game.tiles.length; i++) {
-						probs.push(action.board.getTile(i).probability);
+						probs.push(action.board.tiles[i].probability);
 					}
 					const probsmin = Math.min(...probs)
 					for (let i=probs.length-1; i>=0; i--) {
@@ -253,9 +255,9 @@ async function handleActions(message) {
 							probs.splice(i, 1);
 						}
 					}
-					const minexy = probs[(Math.floor(Math.random() * probs.length))];
-					game.getTile(minexy).make_bomb();
-					action.board.getTile(minexy).setFoundBomb();
+					const minei = probs[(Math.floor(Math.random() * probs.length))];
+					game.tiles[minei].make_bomb();
+					action.board.tiles[minei].setFoundBomb();
 					minecount++;
 				}
 				/*
