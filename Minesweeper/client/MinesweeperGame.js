@@ -205,6 +205,12 @@ async function handleActions(message) {
 			
 			if (!tile.is_bomb && action.die) {
 
+				for (let m=0; m<game.tiles.length; m++) {
+					if (game.tiles[m].is_bomb) {
+						action.board.getTile(m).setFoundBomb();
+					}
+				}
+				
 				const options = {};
                     		//options.playStyle = PLAY_STYLE_NOFLAGS;
                     		//options.verbose = false;
@@ -220,6 +226,7 @@ async function handleActions(message) {
 					}
 				}
 				for (let m=0; m<game.tiles.length; m++) {
+					break;
 					if (witnesses.length > 0) {break;}
 					if (game.tiles[m].is_bomb && game.tiles[m].is_covered) {
 						const adjacents = game.getAdjacent(game.tiles[m]);
