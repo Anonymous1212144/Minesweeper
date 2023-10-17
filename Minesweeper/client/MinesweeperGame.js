@@ -200,6 +200,7 @@ async function causeDie(game, tile, action, chord=false) {
 		var minei;
 		while (mineindices.length > 0 || minecount < game.num_bombs) {
 			await solver(action.board, options);
+			minecount = 0;
 			for (let i=0; i<game.tiles.length; i++) {
 				if (action.board.tiles[i].probability == 0) {
 					game.tiles[i].make_bomb();
