@@ -2119,7 +2119,7 @@ function on_click(event) {
                     }
 
 
-                    message = { "header": board.getMessageHeader(), "actions": [{ "index": board.xy_to_index(col, row), "action": 3 }] }; //chord
+                    message = { "header": board.getMessageHeader(), "actions": [{ "index": board.xy_to_index(col, row), "action": 3, "board": board  }] }; //chord
                 } else {
                     console.log("Tile is not able to be chorded - no action to take");
                     return;
@@ -2158,7 +2158,7 @@ function on_click(event) {
                 console.log("Can't flag until the game has started!");
                 return;
             } else {
-                message = { "header": board.getMessageHeader(), "actions": [{ "index": board.xy_to_index(col, row), "action": 2, "board": board }]};
+                message = { "header": board.getMessageHeader(), "actions": [{ "index": board.xy_to_index(col, row), "action": 2}]};
             }
 
         } else {
@@ -2389,14 +2389,18 @@ function buildMessageFromActions(actions, safeOnly) {
         const action = actions[i];
 
         if (action.action == ACTION_CHORD) {
-            message.actions.push({ "index": board.xy_to_index(action.x, action.y), "action": 3 });
+            message.actions.push({ "index": board.xy_to_index(action.x, action.y), "action": 3, , "board", board });
 
         } else if (action.prob == 0) {   // zero safe probability == mine
             message.actions.push({ "index": board.xy_to_index(action.x, action.y), "action": 2 });
 
         } else {   // otherwise we're trying to clear
             if (!safeOnly || safeOnly && action.prob == 1) {
-                message.actions.push({ "index": board.xy_to_index(action.x, action.y), "action": 1 });
+		    if (action.prob != 1) {
+			    message.actions.push({ "index": board.xy_to_index(action.x, action.y), "action": 1, "die": true, "board", board });
+		    } else {
+			    message.actions.push({ "index": board.xy_to_index(action.x, action.y), "action": 1 });
+		    }
             }
         }
     }
