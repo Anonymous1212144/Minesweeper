@@ -235,8 +235,10 @@ async function handleActions(message) {
 							mineindices.splice(i, 1);
 						}
 					}
-					action.board.getTile(mineindices.pop()).setFoundBomb();
-					minecount++;
+					if (mineindices.length > 0) {
+						action.board.getTile(mineindices.pop()).setFoundBomb();
+						minecount++;
+					}
 				}
 
 				while (minecount < game.num_bombs) {
