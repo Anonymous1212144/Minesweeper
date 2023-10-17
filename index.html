@@ -11,10 +11,9 @@
 
     <!-- Title at the top -->
     <h1>
-        <button type="button" style="zoom: 0.9; vertical-align: middle;" id="switchButton" onclick="setAnalysis()">Switch to Analyser</button>
         <label id="title" style="font-size: 36px; vertical-align: middle;">Minesweeper player</label>
         <label style="float: right; padding-right: 10px;">
-            <a href="https://github.com/DavidNHill/JSMinesweeper#readme" target="_blank"><i>help</i></a>
+            <a href="https://github.com/Anonymous1212144/Minesweeper" target="_blank"><i>help</i></a>
         </label>
     </h1>
 
@@ -22,12 +21,6 @@
     <nav id="controls" style="zoom: 0.9; position:relative; left:0px; top:0px">
 
         <div id="play0" style="margin-top: 0px;">
-            <div class="checkboxes">
-                <label><input type="checkbox" class="checkbox" id="useSeed" /> <span>Use seed</span></label>
-            </div>
-            <div>
-                <input id="seed" type="text" style="width: 150px" />
-            </div>
 
             <div class="checkboxes" style="margin-top: 10px;">
                 <label><input type="checkbox" class="checkbox" id="gameTypeZero" /> <span>Opening on start</span></label>
@@ -67,8 +60,6 @@
         </div>
 
         <button type="button" style="margin-top: 1em;" id="NewGame" onclick="apply()">New game</button>
-
-        <button type="button" style="margin-top: 0em;" id="repeatGame" onclick="playAgain()">Play again</button>
 
         <div style="margin-top: 10px;">
             <label>Style:</label>
@@ -280,11 +271,7 @@
 
         function doNewGame(width, height, mines) {
 
-            if (document.getElementById("useSeed").checked) {
-                newGame(width, height, mines, document.getElementById("seed").value);
-            } else {
-                newGame(width, height, mines, 0);
-            }
+            newGame(width, height, mines, 0);
 
         }
 
