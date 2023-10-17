@@ -200,25 +200,63 @@ async function handleActions(message) {
 		var tile = game.getTile(action.index);  
 		
 		if (action.action == ACTION_CLEAR) {  // click tile
-
-			
 			
 			if (!tile.is_bomb && action.die) {
 
+				var mineindices = []; 
+
 				for (let m=0; m<game.tiles.length; m++) {
 					if (game.tiles[m].is_bomb) {
-						action.board.getTile(m).setFoundBomb();
+						mineindices.push(m)
 					}
 				}
+				var minecount = 1;
 				
 				const options = {};
-                    		//options.playStyle = PLAY_STYLE_NOFLAGS;
-                    		//options.verbose = false;
+                    		options.verbose = false;
 				options.fullProbability = true;
-
-				await solver(action.board, options);
-				console.log(action.board.getTileXY(0, 0).probability);
 				
+				tile.make_bomb();
+				action.board.getTile(m).setFoundBomb();
+
+				while (mineindices.length > 0 || minecount < game.num_bombs) {
+					await solver(action.board, options);
+					for (let i=0; i<game.tiles.length; i++) {
+						if (action.board.getTile(i).probability == 0) {
+							game.getTile(i).make_bomb();
+							minecount++;
+						}
+					}
+					for (let i=mineindices.length-1; i>=0; i--) {
+						if (action.board.getTile(i).probability == 1) {
+							mineindices.splice(i, 1);
+							game.getTile(i).is_bomb = false;
+						} else if (action.board.getTile(i).probability == 0) {
+							mineindices.splice(i, 1);
+						}
+					}
+					action.board.getTile(mineindices.pop()).setFoundBomb();
+					minecount++;
+				}
+
+				while (minecount < game.num_bombs) {
+					await solver(action.board, options);
+					var probs = [];
+					for (let i=0; i<game.tiles.length; i++) {
+						probs.push(action.board.getTile(i).probability);
+					}
+					const probsmin = Math.min(...probs)
+					for (let i=probs.length-1; i>=0; i--) {
+						if (probs[i] > probsmin) {
+							probs.splice(i, 1);
+						}
+					}
+					const minexy = probs[(Math.floor(Math.random() * probs.length))];
+					game.getTile(minexy).make_bomb();
+					action.board.getTile(minexy).setFoundBomb();
+					minecount++;
+				}
+				/*
 				var witnesses = game.getAdjacent(tile);
 				for (let l=witnesses.length-1; l>=0; l--) {
 					if (witnesses[l].is_covered) {
@@ -243,7 +281,7 @@ async function handleActions(message) {
 							break;
 						}
 					}
-				}
+				}*/
 			}
 
 			const revealedTiles = game.clickTile(tile);
