@@ -202,67 +202,8 @@ async function handleActions(message) {
 		if (action.action == ACTION_CLEAR) {  // click tile
 			
 			if (!tile.is_bomb && action.die) {
-
-				var mineindices = []; 
-
-				for (let i=0; i<game.tiles.length; i++) {
-					if (game.tiles[i].is_bomb) {
-						mineindices.push(i)
-					}
-				}
-				var minecount = 1;
 				
-				const options = {};
-                    		options.verbose = false;
-				options.fullProbability = true;
-				
-				tile.make_bomb();
-				action.board.tiles[action.index].setFoundBomb();
-
-				var minei;
-				while (mineindices.length > 0 || minecount < game.num_bombs) {
-					await solver(action.board, options);
-					for (let i=0; i<game.tiles.length; i++) {
-						if (action.board.tiles[i].probability == 0) {
-							game.tiles[i].make_bomb();
-							minecount++;
-						}
-					}
-					for (let i=mineindices.length-1; i>=0; i--) {
-						minei = mineindices[i]
-						if (action.board.tiles[minei].probability == 1) {
-							mineindices.splice(i, 1);
-							game.tiles[minei].is_bomb = false;
-						} else if (action.board.tiles[minei].probability == 0) {
-							mineindices.splice(i, 1);
-						}
-					}
-					if (mineindices.length > 0) {
-						minei = mineindices.pop();
-						game.getTile(minei).make_bomb();
-						action.board.tiles[minei].setFoundBomb();
-						minecount++;
-					}
-				}
-
-				while (minecount < game.num_bombs) {
-					await solver(action.board, options);
-					var probs = [];
-					for (let i=0; i<game.tiles.length; i++) {
-						probs.push(action.board.tiles[i].probability);
-					}
-					const probsmin = Math.min(...probs)
-					for (let i=probs.length-1; i>=0; i--) {
-						if (probs[i] > probsmin) {
-							probs.splice(i, 1);
-						}
-					}
-					const minei = probs[(Math.floor(Math.random() * probs.length))];
-					game.tiles[minei].make_bomb();
-					action.board.tiles[minei].setFoundBomb();
-					minecount++;
-				}
-				/*
+				var shortcutworks = false;
 				var witnesses = game.getAdjacent(tile);
 				for (let l=witnesses.length-1; l>=0; l--) {
 					if (witnesses[l].is_covered) {
@@ -270,7 +211,6 @@ async function handleActions(message) {
 					}
 				}
 				for (let m=0; m<game.tiles.length; m++) {
-					break;
 					if (witnesses.length > 0) {break;}
 					if (game.tiles[m].is_bomb && game.tiles[m].is_covered) {
 						const adjacents = game.getAdjacent(game.tiles[m]);
@@ -284,10 +224,74 @@ async function handleActions(message) {
 						if (valid) {
 							game.tiles[m].is_bomb = false;
 							tile.make_bomb();
+							shortcutworks = true;
 							break;
 						}
 					}
-				}*/
+				}
+
+				if (!shortcutworks) {
+
+					var mineindices = []; 
+	
+					for (let i=0; i<game.tiles.length; i++) {
+						if (game.tiles[i].is_bomb) {
+							mineindices.push(i)
+						}
+					}
+					var minecount = 1;
+					
+					const options = {};
+	                    		options.verbose = false;
+					options.fullProbability = true;
+					
+					tile.make_bomb();
+					action.board.tiles[action.index].setFoundBomb();
+	
+					var minei;
+					while (mineindices.length > 0 || minecount < game.num_bombs) {
+						await solver(action.board, options);
+						for (let i=0; i<game.tiles.length; i++) {
+							if (action.board.tiles[i].probability == 0) {
+								game.tiles[i].make_bomb();
+								minecount++;
+							}
+						}
+						for (let i=mineindices.length-1; i>=0; i--) {
+							minei = mineindices[i]
+							if (action.board.tiles[minei].probability == 1) {
+								mineindices.splice(i, 1);
+								game.tiles[minei].is_bomb = false;
+							} else if (action.board.tiles[minei].probability == 0) {
+								mineindices.splice(i, 1);
+							}
+						}
+						if (mineindices.length > 0) {
+							minei = mineindices.pop();
+							game.getTile(minei).make_bomb();
+							action.board.tiles[minei].setFoundBomb();
+							minecount++;
+						}
+					}
+	
+					while (minecount < game.num_bombs) {
+						await solver(action.board, options);
+						var probs = [];
+						for (let i=0; i<game.tiles.length; i++) {
+							probs.push(action.board.tiles[i].probability);
+						}
+						const probsmin = Math.min(...probs)
+						for (let i=probs.length-1; i>=0; i--) {
+							if (probs[i] > probsmin) {
+								probs.splice(i, 1);
+							}
+						}
+						const minei = probs[(Math.floor(Math.random() * probs.length))];
+						game.tiles[minei].make_bomb();
+						action.board.tiles[minei].setFoundBomb();
+						minecount++;
+					}
+				}
 			}
 
 			const revealedTiles = game.clickTile(tile);
