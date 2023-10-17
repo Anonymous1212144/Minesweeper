@@ -79,7 +79,7 @@ async function solver(board, options) {
     // allow the solver to bring back no moves 5 times. No moves is possible when playing no-flags 
     while (noMoves < 5 && cleanActions.length == 0) {
         noMoves++;
-        const actions = await doSolve(board, options, options.forcepe);  // look for solutions
+        const actions = await doSolve(board, options);  // look for solutions
         //console.log(actions);
 
         if (options.playStyle == PLAY_STYLE_EFFICIENCY || options.playStyle == PLAY_STYLE_NOFLAGS_EFFICIENCY) {
@@ -138,7 +138,7 @@ async function solver(board, options) {
     // **** functions below here ****
     
     // this finds the best moves 
-    async function doSolve(board, options, forcepe = false) {
+    async function doSolve(board, options) {
 
         // find all the tiles which are revealed and have un-revealed / un-flagged adjacent squares
         const allCoveredTiles = [];
@@ -235,7 +235,7 @@ async function solver(board, options) {
             result.push(...trivial_actions(board, witnesses));
         }
  
-        if (result.length > oldMineCount && !forcepe) {
+        if (result.length > oldMineCount && !options.forcepe) {
             showMessage("The solver found " + result.length + " trivial safe moves");
             return result;
             /*
@@ -412,7 +412,7 @@ async function solver(board, options) {
         */
 
         // if we have an isolated edge process that
-        if (pe.bestProbability < 1 && pe.isolatedEdgeBruteForce != null) {
+        if ((pe.bestProbability < 1 || options.forcepe) && pe.isolatedEdgeBruteForce != null) {
 
             const solutionCount = pe.isolatedEdgeBruteForce.crunch();
 
@@ -452,7 +452,7 @@ async function solver(board, options) {
         }
 
         let partialBFDA = null;
-        if (pe.bestProbability < 1 && pe.finalSolutionsCount < bfdaThreshold) {
+        if ((pe.bestProbability < 1 || options.forcepe) && pe.finalSolutionsCount < bfdaThreshold) {
 
             showMessage("The solver is starting brute force deep analysis on " + pe.finalSolutionsCount + " solutions");
             await sleep(1);
