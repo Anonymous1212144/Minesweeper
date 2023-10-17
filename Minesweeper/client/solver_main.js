@@ -30,10 +30,6 @@ async function solver(board, options) {
         return;
     }
 
-    if (options.forcepe == null) {
-        options.forcepe = true;
-    }
-
     if (options.verbose == null) {
         options.verbose = true;
         writeToConsole("WARN: Verbose parameter not received by the solver, setting verbose = true");
@@ -235,7 +231,7 @@ async function solver(board, options) {
             result.push(...trivial_actions(board, witnesses));
         }
  
-        if (result.length > oldMineCount && !options.forcepe) {
+        if (result.length > oldMineCount) {
             showMessage("The solver found " + result.length + " trivial safe moves");
             return result;
             /*
@@ -412,7 +408,7 @@ async function solver(board, options) {
         */
 
         // if we have an isolated edge process that
-        if ((pe.bestProbability < 1 || options.forcepe) && pe.isolatedEdgeBruteForce != null) {
+        if (pe.bestProbability < 1 && pe.isolatedEdgeBruteForce != null) {
 
             const solutionCount = pe.isolatedEdgeBruteForce.crunch();
 
@@ -452,7 +448,7 @@ async function solver(board, options) {
         }
 
         let partialBFDA = null;
-        if ((pe.bestProbability < 1 || options.forcepe) && pe.finalSolutionsCount < bfdaThreshold) {
+        if (pe.bestProbability < 1 && pe.finalSolutionsCount < bfdaThreshold) {
 
             showMessage("The solver is starting brute force deep analysis on " + pe.finalSolutionsCount + " solutions");
             await sleep(1);
