@@ -2158,7 +2158,7 @@ function on_click(event) {
                 console.log("Can't flag until the game has started!");
                 return;
             } else {
-                message = { "header": board.getMessageHeader(), "actions": [{ "index": board.xy_to_index(col, row), "action": 2 }], "board": board };
+                message = { "header": board.getMessageHeader(), "actions": [{ "index": board.xy_to_index(col, row), "action": 2, "board": board }]};
             }
 
         } else {
