@@ -286,11 +286,6 @@ async function handleActions(message) {
 		const action = actions[i];
 		
 		var tile = game.getTile(action.index);
-
-		const options = {};
-		options.verbose = false;
-		options.fullProbability = true;
-		await solver(action.board, options);
 		
 		if (action.action == ACTION_CLEAR) {  // click tile
 			
@@ -318,6 +313,11 @@ async function handleActions(message) {
 			reply.tiles.push({"action" : 2, "index" : action.index, "flag" : tile.isFlagged()});    // set or remove flag
 
 		} else if (action.action == ACTION_CHORD) {  // chord
+			const options = {};
+			options.verbose = false;
+			options.fullProbability = true;
+			await solver(action.board, options);
+			
 			const affected = game.getAdjacent(tile);
 			for (i=0; i<affected.length; i++) {
 				if (!affected[i].is_flagged && affected[i].is_bomb) {break;}
