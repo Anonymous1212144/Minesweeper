@@ -320,8 +320,9 @@ async function handleActions(message) {
 		} else if (action.action == ACTION_CHORD) {  // chord
 			const affected = game.getAdjacent(tile);
 			for (i=0; i<affected.length; i++) {
-				if (action.board.tiles[affected[i].index].probability != 1) {
+				if (affected[i].is_covered && action.board.tiles[affected[i].index].probability != 1) {
 					await causeDie(game, affected[i], action);
+					break;
 				}
 			}
 			
