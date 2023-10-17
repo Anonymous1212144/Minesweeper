@@ -254,14 +254,21 @@
                 height = MAX_HEIGHT;
             }
 
-            if (mines < 1) {
-                document.getElementById("mines").value = 99
-                mines = 99;
+            if (width*height < 30) {
+                document.getElementById("height").value = 16;
+                height = 16;
+                document.getElementById("width").value = 30;
+                width = 30;
             }
 
-            if (mines > width * height - 1) {
-                document.getElementById("mines").value = width * height - 1;
-                mines = width * height - 1;
+            if (mines < width * height * 0.1) {
+                document.getElementById("mines").value = Math.ceil(width * height * 0.1);
+                mines = Math.ceil(width * height * 0.1);
+            }
+
+            if (mines > width * height - 10) {
+                document.getElementById("mines").value = width * height - 10;
+                mines = width * height - 10;
             }
 
             doNewGame(width, height, mines);
