@@ -205,12 +205,12 @@ async function handleActions(message) {
 			
 			if (!tile.is_bomb && action.die) {
 
-				//const options = {};
+				const options = {};
                     		//options.playStyle = PLAY_STYLE_NOFLAGS;
                     		//options.verbose = false;
-				//options.forcepe = true;
+				options.fullProbability = true;
 
-				//await solver(action.board, options);
+				await solver(action.board, options);
 				console.log(action.board.getTileXY(0, 0).probability);
 				
 				var witnesses = game.getAdjacent(tile);
