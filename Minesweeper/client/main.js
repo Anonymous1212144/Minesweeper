@@ -2389,7 +2389,7 @@ function buildMessageFromActions(actions, safeOnly) {
         const action = actions[i];
 
         if (action.action == ACTION_CHORD) {
-            message.actions.push({ "index": board.xy_to_index(action.x, action.y), "action": 3, , "board", board });
+            message.actions.push({ "index": board.xy_to_index(action.x, action.y), "action": 3, "board": board });
 
         } else if (action.prob == 0) {   // zero safe probability == mine
             message.actions.push({ "index": board.xy_to_index(action.x, action.y), "action": 2 });
@@ -2397,7 +2397,7 @@ function buildMessageFromActions(actions, safeOnly) {
         } else {   // otherwise we're trying to clear
             if (!safeOnly || safeOnly && action.prob == 1) {
 		    if (action.prob != 1) {
-			    message.actions.push({ "index": board.xy_to_index(action.x, action.y), "action": 1, "die": true, "board", board });
+			    message.actions.push({ "index": board.xy_to_index(action.x, action.y), "action": 1, "die": true, "board": board });
 		    } else {
 			    message.actions.push({ "index": board.xy_to_index(action.x, action.y), "action": 1 });
 		    }
