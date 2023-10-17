@@ -219,6 +219,7 @@ async function handleActions(message) {
 				tile.make_bomb();
 				action.board.tiles[action.index].setFoundBomb();
 
+				var minei;
 				while (mineindices.length > 0 || minecount < game.num_bombs) {
 					await solver(action.board, options);
 					for (let i=0; i<game.tiles.length; i++) {
@@ -228,15 +229,16 @@ async function handleActions(message) {
 						}
 					}
 					for (let i=mineindices.length-1; i>=0; i--) {
-						if (action.board.tiles[mineindices[i]].probability == 1) {
+						minei = mineindices[i]
+						if (action.board.tiles[minei].probability == 1) {
 							mineindices.splice(i, 1);
-							game.tiles[i].is_bomb = false;
-						} else if (action.board.tiles[mineindices[i]].probability == 0) {
+							game.tiles[minei].is_bomb = false;
+						} else if (action.board.tiles[minei].probability == 0) {
 							mineindices.splice(i, 1);
 						}
 					}
 					if (mineindices.length > 0) {
-						const minei = mineindices.pop();
+						minei = mineindices.pop();
 						game.getTile(minei).make_bomb();
 						action.board.tiles[minei].setFoundBomb();
 						minecount++;
