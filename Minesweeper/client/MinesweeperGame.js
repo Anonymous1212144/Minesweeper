@@ -174,10 +174,7 @@ async function handleActions(message) {
 	let game = getGame(header.id);
 	
 	if (game == null) {
-		if (docNgMode.checked) {
-			game = await createNoGuessGame(header, actions[0].index);
-		} else {
-			game = createGame(header, actions[0].index);
+		game = await createNoGuessGame(header, actions[0].index);
         }
 	}
 
