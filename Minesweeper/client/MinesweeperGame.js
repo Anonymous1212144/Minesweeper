@@ -198,7 +198,7 @@ async function causeDie(game, tile, action, chord=false) {
 		action.board.tiles[tile.index].setFoundBomb();
 
 		var minei;
-		while (mineindices.length > 0 || minecount < game.num_bombs) {
+		while (mineindices.length > 0 && minecount < game.num_bombs) {
 			await solver(action.board, options);
 			minecount = 0;
 			for (let i=0; i<game.tiles.length; i++) {
